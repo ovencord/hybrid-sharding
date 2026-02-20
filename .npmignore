@@ -16,6 +16,7 @@ test
 jest.config.js
 package-lock.json
 bun.lockb
+bun.lock
 tsconfig.json
 
 # Documentation
