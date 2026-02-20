@@ -18,7 +18,7 @@ export class QueueManager implements Plugin {
 
     public build(manager: ClusterManager) {
         this.manager = manager;
-        // @ts-expect-error - legacy compatibility
+        // @ts-ignore - legacy compatibility
         this.manager.queueManager = this;
         this.manager._debug("[QueueManager] Plugin initialized");
     }

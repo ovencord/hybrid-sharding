@@ -48,7 +48,7 @@ export class RedisClient {
 
     async get<T>(key: string): Promise<T | null> {
         const data = await this.client.get(key);
-        return data ? JSON.parse(data) : null;
+        return data ? JSON.parse(data as string) as T : null;
     }
 
     async del(key: string): Promise<void> {

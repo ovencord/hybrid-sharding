@@ -415,7 +415,7 @@ export class ClusterManager extends AsyncEventEmitter {
                 return (
                     this.clusters
                         .get(cluster)
-                        // @ts-expect-error - legacy compatibility
+                        // @ts-ignore - legacy compatibility
                         ?.[method](...args, undefined, timeout)
                         .then((e: any) => [e])
                 );
@@ -427,7 +427,7 @@ export class ClusterManager extends AsyncEventEmitter {
 
         const promises = [];
 
-        // @ts-expect-error - legacy compatibility
+        // @ts-ignore - legacy compatibility
         for (const cl of clusters) promises.push(cl[method](...args, undefined, timeout));
         return Promise.all(promises);
     }

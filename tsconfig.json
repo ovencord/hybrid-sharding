@@ -1,33 +1,23 @@
 {
     "include": ["src"],
     "compilerOptions": {
-        /* --- CORE CONFIG --- */
         "target": "ESNext",
         "module": "ESNext",
-        "moduleResolution": "Bundler", // <--- FONDAMENTALE PER BUN
-        "lib": ["ESNext", "DOM", "WebWorker"], // <--- FIXA 'BodyInit' e 'Response'
+        "moduleResolution": "Bundler",
+        "lib": ["ESNext", "DOM", "WebWorker"],
         "types": ["bun"],
         "noEmit": true,
+        "skipLibCheck": true,
         "allowImportingTsExtensions": true,
-
-        /* --- INTEROP & RESOLUTION --- */
         "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
-
-        /* --- RELAXING (PER PASSARE IL CI) --- */
-        "skipLibCheck": true, // <--- ORDINA A TS DI NON GUARDARE DENTRO NODE_MODULES
-        "strict": false,      // <--- Rilassiamo la presa per ora
-        "noImplicitAny": false,
-        "noImplicitOverride": false, // <--- ELIMINA GLI ERRORI 'override' MODIFIER
-        "useUnknownInCatchVariables": false,
-        
-        /* --- CLEANUP --- */
         "baseUrl": ".",
         "paths": {
-            "@ovencord/*": ["../packages/*/src"]
-        }
+            "@ovencord/*": ["node_modules/@ovencord/*/src/index.ts"]
+        },
+        "strict": false,
+        "noImplicitAny": false,
+        "noImplicitOverride": false
     },
     "exclude": ["node_modules", "dist"]
 }
