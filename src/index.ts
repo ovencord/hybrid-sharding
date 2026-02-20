@@ -6,6 +6,7 @@ export * from './Plugins/HeartbeatSystem.ts';
 export * from './Plugins/ReCluster.ts';
 export * from './Plugins/AutoResharderSystem.ts';
 export * from './Plugins/QueueManager.ts';
+export * from './Structures/AsyncEventEmitter.ts';
 export * from './Structures/Child.ts';
 export * from './Structures/Data.ts';
 export * from './Structures/IPCHandler.ts';

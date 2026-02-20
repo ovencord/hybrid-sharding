@@ -1,4 +1,4 @@
-import EventEmitter from "node:events";
+import { AsyncEventEmitter } from "../Structures/AsyncEventEmitter.ts";
 
 import { ChildClient } from "../Structures/Child.ts";
 import { getInfo } from "../Structures/Data.ts";
@@ -16,7 +16,7 @@ import { generateNonce } from "../Util/Util.ts";
 /**
  * communicates between the master and the cluster process
  */
-export class ClusterClient<DiscordClient = DjsDiscordClient> extends EventEmitter {
+export class ClusterClient<DiscordClient = DjsDiscordClient> extends AsyncEventEmitter {
     client: DiscordClient;
     shardList: number[];
     queue: { mode: 'auto' | string | undefined };

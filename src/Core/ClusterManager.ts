@@ -1,7 +1,4 @@
-import EventEmitter from "node:events";
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
+import { AsyncEventEmitter } from "../Structures/AsyncEventEmitter.ts";
 
 import type { AutoResharderManager } from "../Plugins/AutoResharderSystem.ts";
 import type { HeartbeatManager } from "../Plugins/HeartbeatSystem.ts";
@@ -20,7 +17,7 @@ import {
 } from "../Util/Util.ts";
 import { Cluster } from "./Cluster.ts";
 
-export class ClusterManager extends EventEmitter {
+export class ClusterManager extends AsyncEventEmitter {
     /**
      * Whether clusters should automatically respawn upon exiting
      */
@@ -116,9 +113,16 @@ export class ClusterManager extends EventEmitter {
 
         this.file = file;
         if (!file) throw new Error('CLIENT_INVALID_OPTION | No File specified.');
-        if (!path.isAbsolute(file)) this.file = path.resolve(process.cwd(), file);
-        const stats = fs.statSync(this.file);
-        if (!stats.isFile()) throw new Error('CLIENT_INVALID_OPTION | Provided is file is not type of file');
+
+        // Resolve relative paths to absolute
+        const isAbsolute = file.startsWith('/') || /^[A-Za-z]:[\\/]/.test(file);
+        if (!isAbsolute) this.file = `${process.cwd()}/${file}`;
+
+        // Verify file exists using Bun.file
+        const bunFile = Bun.file(this.file);
+        if (bunFile.size === 0 && !Bun.file(this.file).name) {
+            throw new Error('CLIENT_INVALID_OPTION | Provided file does not exist');
+        }
 
         this.totalShards = options.totalShards === 'auto' ? -1 : (options.totalShards ?? -1);
         if (this.totalShards !== -1) {
@@ -249,7 +253,7 @@ export class ClusterManager extends EventEmitter {
         }
         let clusterAmount = this.totalClusters;
         if (clusterAmount === -1) {
-            clusterAmount = os.cpus().length;
+            clusterAmount = navigator.hardwareConcurrency ?? 4;
             this.totalClusters = clusterAmount;
         } else {
             if (typeof clusterAmount !== 'number' || isNaN(clusterAmount)) {

@@ -1,5 +1,4 @@
-// Removed node:child_process import
-import type { Client } from "discord.js";
+import type { Client } from "@ovencord/discord.js";
 
 import type { Cluster } from "../Core/Cluster.ts";
 import type { ClusterClient } from "../Core/ClusterClient.ts";

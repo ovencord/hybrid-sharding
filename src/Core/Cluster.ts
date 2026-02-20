@@ -1,5 +1,4 @@
-import EventEmitter from "node:events";
-import path from "node:path";
+import { AsyncEventEmitter } from "../Structures/AsyncEventEmitter.ts";
 
 import { Child } from "../Structures/Child.ts";
 import { ClusterHandler } from "../Structures/IPCHandler.ts";
@@ -14,9 +13,9 @@ import type { ClusterManager } from "./ClusterManager.ts";
  * A self-contained cluster created by the {@link ClusterManager}. Each one has a {@link DjsDiscordClient} that contains
  * an instance of the bot and its {@link DjsDiscordClient}. When its child process exits for any reason, the cluster will
  * spawn a new one to replace it as necessary.
- * @augments EventEmitter
+ * @augments AsyncEventEmitter
  */
-export class Cluster extends EventEmitter {
+export class Cluster extends AsyncEventEmitter {
     /**
      * Manager that created the cluster
      */
@@ -141,7 +140,7 @@ export class Cluster extends EventEmitter {
      */
     public async spawn(spawnTimeout = -1) {
         if (this.thread) throw new Error('CLUSTER ALREADY SPAWNED | ClusterId: ' + this.id);
-        this.thread = new Child(path.resolve(this.manager.file), {
+        this.thread = new Child(Bun.resolveSync(this.manager.file, process.cwd()), {
             ...this.manager.clusterOptions,
             env: this.env as any,
             /** Construct args with hooks, to provide parameters with in the context of a cluster */
