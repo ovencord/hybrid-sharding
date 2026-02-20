@@ -1,0 +1,49 @@
+{
+    "name": "@ovencord/hybrid-sharding",
+    "version": "1.0.6",
+    "description": "Enterprise Bun-native sharding manager for Discord bots, featuring Redis heartbeats, rolling restarts, and integrated monitoring.",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "type": "module",
+    "scripts": {
+        "test": "bun test",
+        "lint": "eslint src/**/*.ts",
+        "typecheck": "tsc --noEmit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ovencord/hybrid-sharding.git"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "discord",
+        "bun",
+        "sharding",
+        "clustering",
+        "hybrid-sharding",
+        "zero-downtime",
+        "redis"
+    ],
+    "author": "Luigi Colantuono",
+    "license": "MIT",
+    "peerDependencies": {
+        "@ovencord/discord.js": ">=14.16.0",
+        "redis": "^5.0.0"
+    },
+    "peerDependenciesMeta": {
+        "redis": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@ovencord/discord.js": "latest",
+        "eslint": "^9.39.2",
+        "globals": "^17.2.0",
+        "redis": "^5.10.0",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.54.0"
+    }
+}
