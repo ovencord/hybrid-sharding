@@ -33,6 +33,21 @@ The ultimate **Enterprise Bun-native** sharding manager for Discord bots. Built 
 
 ---
 
+### 📊 Comparison: `discord-hybrid-sharding` vs `@ovencord/hybrid-sharding`
+
+| Feature | `discord-hybrid-sharding` | `@ovencord/hybrid-sharding` | Result / Benefit |
+| :--- | :--- | :--- | :--- |
+| **Runtime** | Node.js (Legacy) | **Bun (Native)** | Native execution without emulation |
+| **Unpacked Size** | 681 kB | **115 kB** | **~83% smaller** |
+| **Total Files** | 88 | **26** | Distilled, "crap-free" code |
+| **Process Manager** | `child_process` / `cluster` | **`Bun.spawn`** | Kernel-level process management |
+| **Inter-Process (IPC)** | Node.js IPC (Slow) | **Native Bun IPC** | Near-zero communication latency |
+| **Events System** | `node:events` (Sync) | **`AsyncEventEmitter`** | Does not block Bun's event loop |
+| **CPU Detection** | `node:os` | **`navigator.hardwareConcurrency`** | Zero imports, Web Standard API |
+| **Path Resolution** | `node:path` (JS logic) | **`Bun.resolveSync`** | File resolution written in Zig |
+| **Build Artifacts** | `dist/` (compiled) | **Source-Only (.ts)** | **0ms Build Time** - Runs pure TS |
+| **Node.js Imports** | Present Everywhere | **ZERO (Grep Zero)** | Total independence from the past |
+
 ## 📦 Installation
 
 ```bash
