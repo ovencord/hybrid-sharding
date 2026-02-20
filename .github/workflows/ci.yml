@@ -19,7 +19,7 @@ jobs:
         run: bun install
 
       - name: Type Check
-        run: bunx tsc --noEmit --skipLibCheck
+        run: bunx tsc --project tsconfig.json --noEmit --skipLibCheck --include src/**/* --exclude node_modules
 
       - name: Lint
         run: bun run lint
