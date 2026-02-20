@@ -1,23 +1,18 @@
 {
-    "include": ["src/**/*"],
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
-        "lib": ["ESNext", "DOM", "WebWorker"],
-        "types": ["bun"],
-        "noEmit": true,
-        "skipLibCheck": true,
-        "allowImportingTsExtensions": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "baseUrl": ".",
-        "paths": {
-            "@ovencord/*": ["node_modules/@ovencord/*/src/index.ts"]
-        },
-        "strict": false,
-        "noImplicitAny": false,
-        "noImplicitOverride": false
-    },
-    "exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ESNext", "DOM", "WebWorker"], // <--- Fondamentale per i tipi Web
+    "types": ["bun"],
+    "skipLibCheck": true,         // Salta i controlli sui .d.ts
+    "noEmit": true,
+    "strict": false,              // Rilassa i controlli sulle dipendenze
+    "baseUrl": ".",
+    "paths": {
+      "@ovencord/*": ["./node_modules/@ovencord/*/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],        // <--- IMPORTE: Forza TS a guardare SOLO il tuo codice
+  "exclude": ["node_modules", "**/dist", "**/__tests__"]
 }
