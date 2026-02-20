@@ -16,13 +16,13 @@
 <img width="400" height="211" alt="ovencord hybrid sharding logo" src="https://github.com/user-attachments/assets/12a46f1a-3901-4682-b9a9-b5f75768c607" />
 </p>
 
-## Ovencord Hybrid Sharding
+# Ovencord Hybrid Sharding
 
 The ultimate **Enterprise Bun-native** sharding manager for Discord bots. Built for performance, reliability, and scale.
 
 `@ovencord/hybrid-sharding` is a ground-up refactor of the hybrid sharding concept, optimized specifically for the Bun runtime. It eliminates all Node.js dependencies, leveraging `Bun.spawn` and native Bun IPC for ultra-fast, low-overhead clustering.
 
-##  Key Features
+## Key Features
 
 - **Bun-Native Core**: Zero Node.js dependencies. Uses `Bun.spawn` and native IPC for maximum performance.
 - **Zero-Downtime Rolling Restarts**: Built-in `ReClusterManager` for updating your bot with zero service interruption.
@@ -33,7 +33,7 @@ The ultimate **Enterprise Bun-native** sharding manager for Discord bots. Built 
 
 ---
 
-### 📊 Comparison: `discord-hybrid-sharding` vs `@ovencord/hybrid-sharding`
+## 📦 Comparison: `discord-hybrid-sharding` vs `@ovencord/hybrid-sharding`
 
 | Feature | `discord-hybrid-sharding` | `@ovencord/hybrid-sharding` | Result / Benefit |
 | :--- | :--- | :--- | :--- |
@@ -54,7 +54,7 @@ The ultimate **Enterprise Bun-native** sharding manager for Discord bots. Built 
 bun add @ovencord/hybrid-sharding
 ```
 
-## 🛠️ Quick Start
+## Quick Start
 
 ### 1. The Manager (`cluster.js`)
 
