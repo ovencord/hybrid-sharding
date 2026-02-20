@@ -3,16 +3,18 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ESNext", "DOM", "WebWorker"], // <--- Fondamentale per i tipi Web
+    "lib": ["ESNext", "DOM", "WebWorker"],
     "types": ["bun"],
-    "skipLibCheck": true,         // Salta i controlli sui .d.ts
+    "strict": false,
+    "skipLibCheck": true,
     "noEmit": true,
-    "strict": false,              // Rilassa i controlli sulle dipendenze
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@ovencord/*": ["./node_modules/@ovencord/*/src/index.ts"]
     }
   },
-  "include": ["src/**/*"],        // <--- IMPORTE: Forza TS a guardare SOLO il tuo codice
-  "exclude": ["node_modules", "**/dist", "**/__tests__"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
