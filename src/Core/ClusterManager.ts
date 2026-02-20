@@ -413,9 +413,8 @@ export class ClusterManager extends AsyncEventEmitter {
         if (typeof cluster === 'number') {
             if (this.clusters.has(cluster))
                 return (
-                    this.clusters
-                        .get(cluster)
-                        // @ts-ignore - legacy compatibility
+                    (this.clusters
+                        .get(cluster) as any)
                         ?.[method](...args, undefined, timeout)
                         .then((e: any) => [e])
                 );
@@ -426,9 +425,7 @@ export class ClusterManager extends AsyncEventEmitter {
         if (clusters.length === 0) return Promise.reject(new Error('CLUSTERING_NO_CLUSTERS_FOUND'));
 
         const promises = [];
-
-        // @ts-ignore - legacy compatibility
-        for (const cl of clusters) promises.push(cl[method](...args, undefined, timeout));
+        for (const cl of clusters) promises.push((cl as any)[method](...args, undefined, timeout));
         return Promise.all(promises);
     }
 
@@ -495,7 +492,7 @@ export class ClusterManager extends AsyncEventEmitter {
     /**
      * @param reason If maintenance should be enabled on all clusters with a given reason or disabled when nonce provided
      */
-    triggerMaintenance(reason: string) {
+    triggerMaintenance(reason?: string) {
         return Array.from(this.clusters.values()).forEach(cluster => cluster.triggerMaintenance(reason));
     }
     /**

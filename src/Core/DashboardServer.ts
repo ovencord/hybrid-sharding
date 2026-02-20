@@ -58,7 +58,7 @@ export class DashboardServer {
                     if (enable) {
                         this.manager.triggerMaintenance(reason);
                     } else {
-                        // @ts-ignore - legacy compatibility
+
                         this.manager.triggerMaintenance();
                     }
                     return new Response(`Maintenance ${enable ? 'enabled' : 'disabled'}`);

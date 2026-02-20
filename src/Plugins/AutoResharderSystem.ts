@@ -258,7 +258,7 @@ export class AutoResharderManager {
         };
     }
     build(manager: ClusterManager) {
-        // @ts-ignore - legacy compatibility
+
         manager[this.name] = this;
         this.manager = manager;
 

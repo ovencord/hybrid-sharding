@@ -216,17 +216,14 @@ export class ClusterClient<DiscordClient = DjsDiscordClient> extends AsyncEventE
     }
 
     public async _eval(script: string) {
-        // @ts-ignore - legacy compatibility
-        if (this.client._eval) {
-            // @ts-ignore - legacy compatibility
-            return await this.client._eval(script);
+        const client = this.client as any;
+        if (client._eval) {
+            return await client._eval(script);
         }
-        // @ts-ignore - legacy compatibility
-        this.client._eval = function (_: string) {
+        client._eval = function (_: string) {
             return eval(_);  
-        }.bind(this.client);
-        // @ts-ignore - legacy compatibility
-        return await this.client._eval(script);
+        }.bind(client);
+        return await client._eval(script);
     }
 
     /**
@@ -242,8 +239,7 @@ export class ClusterClient<DiscordClient = DjsDiscordClient> extends AsyncEventE
              * @event Client#error
              * @param {Error} error The error encountered
              */
-            // @ts-ignore - legacy compatibility
-            this.client.emit?.(Events.ERROR, error);
+            (this.client as any).emit?.(Events.ERROR, error);
         });
     }
 

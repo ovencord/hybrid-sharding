@@ -4,6 +4,14 @@
  */
 declare module "@ovencord/discord.js" {
     export class Client {
+        _eval?(script: string): any;
+        emit?(event: string | symbol, ...args: any[]): boolean;
+        guilds: any;
         [key: string]: any;
     }
+
+    export const Events: {
+        ERROR: string;
+        [key: string]: string;
+    };
 }
