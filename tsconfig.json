@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@ovencord/*": ["./node_modules/@ovencord/*/src/index.ts"]
+      "@ovencord/discord.js": ["./src/types/ovencord-discord.d.ts"]
     }
   },
   "include": ["src/**/*"],
