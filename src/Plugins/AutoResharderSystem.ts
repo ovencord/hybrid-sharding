@@ -259,7 +259,7 @@ export class AutoResharderManager {
     }
     build(manager: ClusterManager) {
 
-        manager[this.name] = this;
+        (manager as any)[this.name] = this;
         this.manager = manager;
 
         this.validate();
