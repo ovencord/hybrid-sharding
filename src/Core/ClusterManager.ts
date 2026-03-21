@@ -1,21 +1,26 @@
-import { AsyncEventEmitter } from "../Structures/AsyncEventEmitter.ts";
-
-import type { AutoResharderManager } from "../Plugins/AutoResharderSystem.ts";
-import type { HeartbeatManager } from "../Plugins/HeartbeatSystem.ts";
-import type { ReClusterManager } from "../Plugins/ReCluster.ts";
-import type { ChildProcessOptions } from "../Structures/Child.ts";
-import type { BaseMessage } from "../Structures/IPCMessage.ts";
-import { ClusterManagerHooks } from "../Structures/ManagerHooks.ts";
-import { PromiseHandler } from "../Structures/PromiseHandler.ts";
-import { Queue } from "../Structures/Queue.ts";
+import type { AutoResharderManager } from '../Plugins/AutoResharderSystem.ts';
+import type { HeartbeatManager } from '../Plugins/HeartbeatSystem.ts';
+import type { ReClusterManager } from '../Plugins/ReCluster.ts';
+import { AsyncEventEmitter } from '../Structures/AsyncEventEmitter.ts';
+import type { ChildProcessOptions } from '../Structures/Child.ts';
+import type { BaseMessage } from '../Structures/IPCMessage.ts';
+import { ClusterManagerHooks } from '../Structures/ManagerHooks.ts';
+import { PromiseHandler } from '../Structures/PromiseHandler.ts';
+import { Queue } from '../Structures/Queue.ts';
 import type {
-	Awaitable, ClusterManagerEvents, ClusterManagerOptions, ClusterManagerSpawnOptions,
-	ClusterRestartOptions, DjsDiscordClient, evalOptions, Plugin, QueueOptions, Serialized
-} from "../types/shared.ts";
-import {
-	chunkArray, delayFor, fetchRecommendedShards, makePlainError, shardIdForGuildId
-} from "../Util/Util.ts";
-import { Cluster } from "./Cluster.ts";
+    Awaitable,
+    ClusterManagerEvents,
+    ClusterManagerOptions,
+    ClusterManagerSpawnOptions,
+    ClusterRestartOptions,
+    DjsDiscordClient,
+    evalOptions,
+    Plugin,
+    QueueOptions,
+    Serialized,
+} from '../types/shared.ts';
+import { chunkArray, delayFor, fetchRecommendedShards, makePlainError, shardIdForGuildId } from '../Util/Util.ts';
+import { Cluster } from './Cluster.ts';
 
 export class ClusterManager extends AsyncEventEmitter {
     /**
@@ -126,7 +131,7 @@ export class ClusterManager extends AsyncEventEmitter {
 
         this.totalShards = options.totalShards === 'auto' ? -1 : (options.totalShards ?? -1);
         if (this.totalShards !== -1) {
-            if (typeof this.totalShards !== 'number' || isNaN(this.totalShards)) {
+            if (typeof this.totalShards !== 'number' || Number.isNaN(this.totalShards)) {
                 throw new TypeError('CLIENT_INVALID_OPTION | Amount of internal shards must be a number.');
             }
             if (this.totalShards < 1)
@@ -138,7 +143,7 @@ export class ClusterManager extends AsyncEventEmitter {
 
         this.totalClusters = options.totalClusters === 'auto' ? -1 : (options.totalClusters ?? -1);
         if (this.totalClusters !== -1) {
-            if (typeof this.totalClusters !== 'number' || isNaN(this.totalClusters)) {
+            if (typeof this.totalClusters !== 'number' || Number.isNaN(this.totalClusters)) {
                 throw new TypeError('CLIENT_INVALID_OPTION | Amount of Clusters must be a number.');
             }
             if (this.totalClusters < 1)
@@ -150,7 +155,7 @@ export class ClusterManager extends AsyncEventEmitter {
 
         this.shardsPerClusters = options.shardsPerClusters;
         if (this.shardsPerClusters) {
-            if (typeof this.shardsPerClusters !== 'number' || isNaN(this.shardsPerClusters)) {
+            if (typeof this.shardsPerClusters !== 'number' || Number.isNaN(this.shardsPerClusters)) {
                 throw new TypeError('CLIENT_INVALID_OPTION | Amount of ShardsPerClusters must be a number.');
             }
             if (this.shardsPerClusters < 1)
@@ -174,8 +179,11 @@ export class ClusterManager extends AsyncEventEmitter {
                 throw new RangeError('CLIENT_INVALID_OPTION | shardList must contain at least 1 ID.');
             if (
                 this.shardList.some(
-                    shardID =>
-                        typeof shardID !== 'number' || isNaN(shardID) || !Number.isInteger(shardID) || shardID < 0,
+                    (shardID) =>
+                        typeof shardID !== 'number' ||
+                        Number.isNaN(shardID) ||
+                        !Number.isInteger(shardID) ||
+                        shardID < 0,
                 )
             ) {
                 throw new TypeError('CLIENT_INVALID_OPTION | shardList has to contain an array of positive integers.');
@@ -221,11 +229,15 @@ export class ClusterManager extends AsyncEventEmitter {
     /**
      * Spawns multiple internal shards.
      */
-    public async spawn({
-            amount = this.spawnOptions.amount = this.totalShards,
-            delay = this.spawnOptions.delay = 7000,
-            timeout = this.spawnOptions.timeout = -1
-        } = this.spawnOptions
+    public async spawn(
+        {
+            amount = (this.spawnOptions.amount =
+                this.totalShards),
+            delay = (this.spawnOptions.delay =
+                7000),
+            timeout = (this.spawnOptions.timeout =
+                -1),
+        } = this.spawnOptions,
     ) {
         if (delay < 7000) {
             process.emitWarning(
@@ -242,7 +254,7 @@ export class ClusterManager extends AsyncEventEmitter {
             this.totalShards = amount as number;
             this._debug(`Discord recommended a total shard count of ${amount}`);
         } else {
-            if (typeof amount !== 'number' || isNaN(amount)) {
+            if (typeof amount !== 'number' || Number.isNaN(amount)) {
                 throw new TypeError('CLIENT_INVALID_OPTION | Amount of Internal Shards must be a number.');
             }
             if (amount < 1)
@@ -256,7 +268,7 @@ export class ClusterManager extends AsyncEventEmitter {
             clusterAmount = navigator.hardwareConcurrency ?? 4;
             this.totalClusters = clusterAmount;
         } else {
-            if (typeof clusterAmount !== 'number' || isNaN(clusterAmount)) {
+            if (typeof clusterAmount !== 'number' || Number.isNaN(clusterAmount)) {
                 throw new TypeError('CLIENT_INVALID_OPTION | Amount of Clusters must be a number.');
             }
             if (clusterAmount < 1)
@@ -273,7 +285,7 @@ export class ClusterManager extends AsyncEventEmitter {
 
         this.shardClusterList = chunkArray(
             this.shardList,
-            !isNaN(this.shardsPerClusters as any)
+            !Number.isNaN(this.shardsPerClusters as any)
                 ? (this.shardsPerClusters as number)
                 : Math.ceil(this.shardList.length / (this.totalClusters as number)),
         );
@@ -281,7 +293,7 @@ export class ClusterManager extends AsyncEventEmitter {
         if (this.shardClusterList.length !== this.totalClusters) {
             this.totalClusters = this.shardClusterList.length;
         }
-        if (this.shardList.some(shardID => shardID >= Number(amount))) {
+        if (this.shardList.some((shardID) => shardID >= Number(amount))) {
             throw new RangeError('CLIENT_INVALID_OPTION | Shard IDs must be smaller than the amount of shards.');
         }
 
@@ -358,14 +370,14 @@ export class ClusterManager extends AsyncEventEmitter {
     ): Promise<Serialized<T>>;
     public async broadcastEval<T, P>(
         script: string | ((client: DjsDiscordClient, context?: Serialized<P>) => Awaitable<T> | Promise<Serialized<T>>),
-        evalOptions?: evalOptions<| evalOptions<P>>,
+        evalOptions?: evalOptions<evalOptions<P>>,
     ) {
         const options = (evalOptions as any) ?? {};
         if (!script || (typeof script !== 'string' && typeof script !== 'function'))
             return Promise.reject(new TypeError('ClUSTERING_INVALID_EVAL_BROADCAST'));
         script = typeof script === 'function' ? `(${script})(this, ${JSON.stringify(options.context)})` : script;
 
-        if (Object.prototype.hasOwnProperty.call(options, 'cluster')) {
+        if (Object.hasOwn(options, 'cluster')) {
             if (typeof options.cluster === 'number') {
                 if (options.cluster < 0) throw new RangeError('CLUSTER_ID_OUT_OF_RANGE');
             }
@@ -383,7 +395,7 @@ export class ClusterManager extends AsyncEventEmitter {
             if (Array.isArray(options.shard)) {
                 if (options.shard.length === 0) throw new RangeError('ARRAY_MUST_CONTAIN_ONE SHARD_ID');
             }
-            options.cluster = Array.from(this.clusters.values()).find(c =>
+            options.cluster = Array.from(this.clusters.values()).find((c) =>
                 c.shardList.includes(options.shard as number),
             )?.id;
         }
@@ -412,16 +424,11 @@ export class ClusterManager extends AsyncEventEmitter {
 
         if (typeof cluster === 'number') {
             if (this.clusters.has(cluster))
-                return (
-                    (this.clusters
-                        .get(cluster) as any)
-                        ?.[method](...args, undefined, timeout)
-                        .then((e: any) => [e])
-                );
-            return Promise.reject(new Error('CLUSTERING_CLUSTER_NOT_FOUND FOR ClusterId: ' + cluster));
+                return (this.clusters.get(cluster) as any)?.[method](...args, undefined, timeout).then((e: any) => [e]);
+            return Promise.reject(new Error(`CLUSTERING_CLUSTER_NOT_FOUND FOR ClusterId: ${cluster}`));
         }
         let clusters = Array.from(this.clusters.values());
-        if (cluster) clusters = clusters.filter(c => cluster.includes(c.id));
+        if (cluster) clusters = clusters.filter((c) => cluster.includes(c.id));
         if (clusters.length === 0) return Promise.reject(new Error('CLUSTERING_NO_CLUSTERS_FOUND'));
 
         const promises = [];
@@ -434,8 +441,10 @@ export class ClusterManager extends AsyncEventEmitter {
      * @param options Options for respawning shards
      */
     public async respawnAll({
-        clusterDelay = (this.spawnOptions.delay = 5500),
-        respawnDelay = (this.spawnOptions.delay = 5500),
+        clusterDelay = (this.spawnOptions.delay =
+            5500),
+        respawnDelay = (this.spawnOptions.delay =
+            5500),
         timeout = -1,
     } = {}) {
         this.promise.nonce.clear();
@@ -447,7 +456,7 @@ export class ClusterManager extends AsyncEventEmitter {
             const length = this.shardClusterList[i]?.length || this.totalShards / this.totalClusters;
             if (++s < this.clusters.size && clusterDelay > 0) promises.push(delayFor(length * clusterDelay));
             i++;
-            await Promise.all(promises);  
+            await Promise.all(promises);
         }
         return this.clusters;
     }
@@ -493,7 +502,7 @@ export class ClusterManager extends AsyncEventEmitter {
      * @param reason If maintenance should be enabled on all clusters with a given reason or disabled when nonce provided
      */
     triggerMaintenance(reason?: string) {
-        return Array.from(this.clusters.values()).forEach(cluster => cluster.triggerMaintenance(reason));
+        return Array.from(this.clusters.values()).forEach((cluster) => cluster.triggerMaintenance(reason));
     }
     /**
      * Logs out the Debug Messages
@@ -501,9 +510,9 @@ export class ClusterManager extends AsyncEventEmitter {
     public _debug(message: string, cluster?: number) {
         let log;
         if (cluster === undefined) {
-            log = `[BM => Manager] ` + message;
+            log = `[BM => Manager] ${message}`;
         } else {
-            log = `[BM => Cluster ${cluster}] ` + message;
+            log = `[BM => Cluster ${cluster}] ${message}`;
         }
         this.emit('debug', log);
         return log;

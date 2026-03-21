@@ -26,8 +26,7 @@ export class RedisClient {
             this.isConnected = false;
         });
 
-        this.client.on('reconnecting', () => {
-        });
+        this.client.on('reconnecting', () => {});
     }
 
     async connect(): Promise<void> {
@@ -48,7 +47,7 @@ export class RedisClient {
 
     async get<T>(key: string): Promise<T | null> {
         const data = await this.client.get(key);
-        return data ? JSON.parse(data as string) as T : null;
+        return data ? (JSON.parse(data as string) as T) : null;
     }
 
     async del(key: string): Promise<void> {

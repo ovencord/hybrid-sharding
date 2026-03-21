@@ -27,14 +27,14 @@ export class ClusterHandler {
         if (message._type === messageType.CLIENT_BROADCAST_REQUEST) {
             this.cluster.manager
                 .broadcastEval(message._eval!, message.options)
-                ?.then(results => {
+                ?.then((results) => {
                     return this.ipc.send({
                         nonce: message.nonce,
                         _type: messageType.CLIENT_BROADCAST_RESPONSE,
                         _result: results,
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     return this.ipc.send({
                         nonce: message.nonce,
                         _type: messageType.CLIENT_BROADCAST_RESPONSE,
@@ -44,7 +44,7 @@ export class ClusterHandler {
             return;
         }
         if (message._type === messageType.CLIENT_MANAGER_EVAL_REQUEST) {
-            this.cluster.manager.evalOnManager(message._eval!).then(result => {
+            this.cluster.manager.evalOnManager(message._eval!).then((result) => {
                 if (result._error) {
                     return this.ipc.send({
                         nonce: message.nonce,
@@ -104,7 +104,9 @@ export class ClusterClientHandler<DiscordClient> {
         this.ipc = ipc;
     }
 
-    public async handleMessage(message: ResolveMessage & { _eval?: string; options?: any; date?: number; maintenance?: string }) {
+    public async handleMessage(
+        message: ResolveMessage & { _eval?: string; options?: any; date?: number; maintenance?: string },
+    ) {
         if (message._type === messageType.CLIENT_EVAL_REQUEST) {
             try {
                 if (!message._eval) throw new Error('Eval Script not provided');

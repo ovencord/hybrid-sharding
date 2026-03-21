@@ -1,10 +1,10 @@
-import type { Client } from "@ovencord/discord.js";
+import type { Client } from '@ovencord/discord.js';
 
-import type { Cluster } from "../Core/Cluster.ts";
-import type { ClusterClient } from "../Core/ClusterClient.ts";
-import type { ClusterManager } from "../Core/ClusterManager.ts";
-import type { ChildProcessOptions } from "../Structures/Child.ts";
-import type { BaseMessage, IPCMessage } from "../Structures/IPCMessage.ts";
+import type { Cluster } from '../Core/Cluster.ts';
+import type { ClusterClient } from '../Core/ClusterClient.ts';
+import type { ClusterManager } from '../Core/ClusterManager.ts';
+import type { ChildProcessOptions } from '../Structures/Child.ts';
+import type { BaseMessage, IPCMessage } from '../Structures/IPCMessage.ts';
 
 export const Events = {
     ERROR: 'warn',
@@ -23,29 +23,29 @@ export const Endpoints = {
 };
 
 export enum messageType {
-    'MISSING_TYPE',
-    'CUSTOM_REQUEST',
-    'CUSTOM_MESSAGE',
-    'CUSTOM_REPLY',
-    'HEARTBEAT',
-    'HEARTBEAT_ACK',
-    'CLIENT_BROADCAST_REQUEST',
-    'CLIENT_BROADCAST_RESPONSE',
-    'CLIENT_RESPAWN',
-    'CLIENT_RESPAWN_ALL',
-    'CLIENT_MAINTENANCE',
-    'CLIENT_MAINTENANCE_ENABLE',
-    'CLIENT_MAINTENANCE_DISABLE',
-    'CLIENT_MAINTENANCE_ALL',
-    'CLIENT_SPAWN_NEXT_CLUSTER',
-    'CLIENT_READY',
-    'CLIENT_EVAL_REQUEST',
-    'CLIENT_EVAL_RESPONSE',
-    'CLIENT_MANAGER_EVAL_REQUEST',
-    'CLIENT_MANAGER_EVAL_RESPONSE',
-    'MANAGER_BROADCAST_REQUEST',
-    'MANAGER_BROADCAST_RESPONSE',
-    'CLIENT_AUTORESHARDER_SENDDATA',
+    MISSING_TYPE,
+    CUSTOM_REQUEST,
+    CUSTOM_MESSAGE,
+    CUSTOM_REPLY,
+    HEARTBEAT,
+    HEARTBEAT_ACK,
+    CLIENT_BROADCAST_REQUEST,
+    CLIENT_BROADCAST_RESPONSE,
+    CLIENT_RESPAWN,
+    CLIENT_RESPAWN_ALL,
+    CLIENT_MAINTENANCE,
+    CLIENT_MAINTENANCE_ENABLE,
+    CLIENT_MAINTENANCE_DISABLE,
+    CLIENT_MAINTENANCE_ALL,
+    CLIENT_SPAWN_NEXT_CLUSTER,
+    CLIENT_READY,
+    CLIENT_EVAL_REQUEST,
+    CLIENT_EVAL_RESPONSE,
+    CLIENT_MANAGER_EVAL_REQUEST,
+    CLIENT_MANAGER_EVAL_RESPONSE,
+    MANAGER_BROADCAST_REQUEST,
+    MANAGER_BROADCAST_RESPONSE,
+    CLIENT_AUTORESHARDER_SENDDATA,
 }
 
 export interface evalOptions<T = Record<string, unknown>> {

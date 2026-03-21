@@ -7,7 +7,9 @@
     "type": "module",
     "scripts": {
         "test": "bun test",
-        "lint": "eslint src/**/*.ts",
+        "lint": "biome check .",
+        "lint:fix": "biome check --write .",
+        "format": "biome format --write .",
         "typecheck": "tsc --noEmit"
     },
     "repository": {
@@ -38,12 +40,10 @@
         }
     },
     "devDependencies": {
-        "@types/bun": "latest",
+        "@biomejs/biome": "2.4.8",
         "@ovencord/discord.js": "latest",
-        "eslint": "^9.39.2",
-        "globals": "^17.2.0",
+        "@types/bun": "latest",
         "redis": "^5.10.0",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.54.0"
+        "typescript": "^5.9.3"
     }
 }

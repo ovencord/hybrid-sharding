@@ -1,7 +1,7 @@
-import { generateNonce } from '../Util/Util.ts';
-import { messageType } from '../types/shared.ts';
-import type { ClusterClient } from '../Core/ClusterClient.ts';
 import type { Cluster } from '../Core/Cluster.ts';
+import type { ClusterClient } from '../Core/ClusterClient.ts';
+import { messageType } from '../types/shared.ts';
+import { generateNonce } from '../Util/Util.ts';
 
 export interface RawMessage {
     nonce?: string;
@@ -96,6 +96,6 @@ export class IPCMessage extends BaseMessage {
      * Gets the type of the Message from the raw properties
      */
     public getType() {
-        return this.raw._type ?? messageType.CUSTOM_MESSAGE
+        return this.raw._type ?? messageType.CUSTOM_MESSAGE;
     }
 }

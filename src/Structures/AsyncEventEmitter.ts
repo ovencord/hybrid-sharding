@@ -9,7 +9,7 @@ export class AsyncEventEmitter {
         if (!this._listeners.has(event)) {
             this._listeners.set(event, new Set());
         }
-        this._listeners.get(event)!.add(listener);
+        this._listeners.get(event)?.add(listener);
         return this;
     }
 

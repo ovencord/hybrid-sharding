@@ -1,17 +1,14 @@
-import { AsyncEventEmitter } from "../Structures/AsyncEventEmitter.ts";
+import { AsyncEventEmitter } from '../Structures/AsyncEventEmitter.ts';
 
-import { ChildClient } from "../Structures/Child.ts";
-import { getInfo } from "../Structures/Data.ts";
-import { ClusterClientHandler } from "../Structures/IPCHandler.ts";
-import type { RawMessage } from "../Structures/IPCMessage.ts";
-import { BaseMessage, IPCMessage } from "../Structures/IPCMessage.ts";
-import { PromiseHandler } from "../Structures/PromiseHandler.ts";
-import type {
-	Awaitable, ClusterClientEvents, DjsDiscordClient, evalOptions, Serialized
-} from "../types/shared.ts";
-import { Events, messageType
-} from "../types/shared.ts";
-import { generateNonce } from "../Util/Util.ts";
+import { ChildClient } from '../Structures/Child.ts';
+import { getInfo } from '../Structures/Data.ts';
+import { ClusterClientHandler } from '../Structures/IPCHandler.ts';
+import type { RawMessage } from '../Structures/IPCMessage.ts';
+import { BaseMessage, IPCMessage } from '../Structures/IPCMessage.ts';
+import { PromiseHandler } from '../Structures/PromiseHandler.ts';
+import type { Awaitable, ClusterClientEvents, DjsDiscordClient, evalOptions, Serialized } from '../types/shared.ts';
+import { Events, messageType } from '../types/shared.ts';
+import { generateNonce } from '../Util/Util.ts';
 
 /**
  * communicates between the master and the cluster process
@@ -71,13 +68,15 @@ export class ClusterClient<DiscordClient = DjsDiscordClient> extends AsyncEventE
     }
 
     private async _startHeartbeat() {
-        const redis = new (await import("../Util/RedisClient.ts")).RedisClient();
+        const redis = new (await import('../Util/RedisClient.ts')).RedisClient();
         await redis.connect().catch(() => {});
         const interval = Number(this.info.HEARTBEAT_INTERVAL || 10000);
-        
+
         setInterval(async () => {
             if (this.ready) {
-                await redis.set(`hb:cluster:${this.id}`, Date.now().toString(), Math.floor(interval * 2.5 / 1000)).catch(() => {});
+                await redis
+                    .set(`hb:cluster:${this.id}`, Date.now().toString(), Math.floor((interval * 2.5) / 1000))
+                    .catch(() => {});
             }
         }, interval);
     }
@@ -220,9 +219,7 @@ export class ClusterClient<DiscordClient = DjsDiscordClient> extends AsyncEventE
         if (client._eval) {
             return await client._eval(script);
         }
-        client._eval = function (_: string) {
-            return eval(_);  
-        }.bind(client);
+        client._eval = ((_: string) => eval(_)).bind(client);
         return await client._eval(script);
     }
 

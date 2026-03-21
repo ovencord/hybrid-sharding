@@ -1,4 +1,4 @@
-import type { Subprocess } from "bun";
+import type { Subprocess } from 'bun';
 
 export interface ChildProcessOptions {
     clusterData: Record<string, any> | undefined;
@@ -21,10 +21,10 @@ export class Child {
     }
 
     public spawn() {
-        const env = { 
-            ...process.env, 
+        const env = {
+            ...process.env,
             ...this.options.env,
-            ...(this.options.clusterData as any)
+            ...(this.options.clusterData as any),
         };
 
         // Convert all env values to string for Bun.spawn
@@ -34,17 +34,17 @@ export class Child {
         }
 
         this.process = Bun.spawn({
-            cmd: ["bun", "run", this.file, ...this.args],
+            cmd: ['bun', 'run', this.file, ...this.args],
             env: stringEnv,
             cwd: this.options.cwd,
-            stdout: "inherit",
-            stderr: "inherit",
+            stdout: 'inherit',
+            stderr: 'inherit',
             ipc: (message) => {
                 this._onMessage(message);
             },
             onExit: (_proc, exitCode, _signalCode) => {
                 this._onExit(exitCode ?? 0);
-            }
+            },
         });
 
         return this;

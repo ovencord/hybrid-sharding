@@ -1,5 +1,5 @@
-import type { ClusterManager } from "../Core/ClusterManager.ts";
-import type { Plugin } from "../types/shared.ts";
+import type { ClusterManager } from '../Core/ClusterManager.ts';
+import type { Plugin } from '../types/shared.ts';
 
 export interface QueueManagerOptions {
     maxParallelSpawns?: number;
@@ -20,7 +20,7 @@ export class QueueManager implements Plugin {
         this.manager = manager;
 
         (this.manager as any).queueManager = this;
-        this.manager._debug("[QueueManager] Plugin initialized");
+        this.manager._debug('[QueueManager] Plugin initialized');
     }
 
     public add(task: () => Promise<any>) {
@@ -40,7 +40,7 @@ export class QueueManager implements Plugin {
                 this.manager?._debug(`[QueueManager] Task failed: ${err}`);
             }
             if (this.options.spawnDelay) {
-                await new Promise(resolve => setTimeout(resolve, this.options.spawnDelay));
+                await new Promise((resolve) => setTimeout(resolve, this.options.spawnDelay));
             }
         }
 

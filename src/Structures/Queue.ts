@@ -23,7 +23,7 @@ export class Queue {
      */
     public async start() {
         if (!this.options.auto) {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 const interval = setInterval(() => {
                     if (this.queue.length === 0) {
                         clearInterval(interval);

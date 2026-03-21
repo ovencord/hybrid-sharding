@@ -1,5 +1,5 @@
-import type { ClusterManager } from "../Core/ClusterManager.ts";
-import { chunkArray, fetchRecommendedShards } from "../Util/Util.ts";
+import type { ClusterManager } from '../Core/ClusterManager.ts';
+import { chunkArray, fetchRecommendedShards } from '../Util/Util.ts';
 
 export type ReClusterRestartMode = 'rolling';
 
@@ -72,22 +72,22 @@ export class ReClusterManager {
             for (let i = 0; i < this.manager.totalClusters; i++) {
                 const clusterId = this.manager.clusterList[i] || i;
                 const newShards = this.manager.shardClusterList[i] as number[];
-                
+
                 this.manager._debug(`[ReCluster] Spawning replacement for cluster ${clusterId}...`);
                 const newCluster = this.manager.createCluster(clusterId, newShards, this.manager.totalShards, true);
-                
+
                 await newCluster.spawn(timeout);
-                
+
                 const oldCluster = this.manager.clusters.get(clusterId);
                 if (oldCluster) {
                     oldCluster.kill({ force: true, reason: 'rolling restart replacement' });
                 }
-                
+
                 this.manager.clusters.set(clusterId, newCluster);
                 this.manager._debug(`[ReCluster] Cluster ${clusterId} replaced successfully`);
-                
+
                 if (delay > 0 && i < this.manager.totalClusters - 1) {
-                    await new Promise(r => globalThis.setTimeout(r, delay));
+                    await new Promise((r) => globalThis.setTimeout(r, delay));
                 }
             }
         } finally {

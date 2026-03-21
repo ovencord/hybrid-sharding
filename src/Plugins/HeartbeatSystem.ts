@@ -15,7 +15,7 @@ export class HeartbeatManager {
     constructor(options: HeartbeatOptions = {}) {
         this.options = {
             interval: options.interval || 10000,
-            timeout: options.timeout || 30000
+            timeout: options.timeout || 30000,
         };
         this.redis = new RedisClient();
     }
@@ -29,7 +29,7 @@ export class HeartbeatManager {
     public async start() {
         await this.redis.connect().catch(() => {});
         this.checkInterval = setInterval(() => this.checkClusters(), this.options.interval);
-        this.manager?._debug("[Heartbeat] Redis-backed monitoring started");
+        this.manager?._debug('[Heartbeat] Redis-backed monitoring started');
     }
 
     private async checkClusters() {
@@ -37,7 +37,7 @@ export class HeartbeatManager {
         try {
             for (const [id, cluster] of this.manager.clusters) {
                 if (!cluster.thread) continue;
-                
+
                 const lastHeartbeat = await this.redis.get(`hb:cluster:${id}`);
                 if (!lastHeartbeat && cluster.ready) {
                     this.manager._debug(`[Heartbeat] Cluster ${id} missed heartbeat, respawning...`);

@@ -1,13 +1,13 @@
-import { AsyncEventEmitter } from "../Structures/AsyncEventEmitter.ts";
+import { AsyncEventEmitter } from '../Structures/AsyncEventEmitter.ts';
 
-import { Child } from "../Structures/Child.ts";
-import { ClusterHandler } from "../Structures/IPCHandler.ts";
-import type { RawMessage } from "../Structures/IPCMessage.ts";
-import { BaseMessage, IPCMessage } from "../Structures/IPCMessage.ts";
-import type { ClusterEvents, ClusterKillOptions} from "../types/shared.ts";
-import { DjsDiscordClient, messageType } from "../types/shared.ts"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import { delayFor, generateNonce } from "../Util/Util.ts";
-import type { ClusterManager } from "./ClusterManager.ts";
+import { Child } from '../Structures/Child.ts';
+import { ClusterHandler } from '../Structures/IPCHandler.ts';
+import type { RawMessage } from '../Structures/IPCMessage.ts';
+import { BaseMessage, IPCMessage } from '../Structures/IPCMessage.ts';
+import type { ClusterEvents, ClusterKillOptions } from '../types/shared.ts';
+import { type DjsDiscordClient, messageType } from '../types/shared.ts';
+import { delayFor, generateNonce } from '../Util/Util.ts';
+import type { ClusterManager } from './ClusterManager.ts';
 
 /**
  * A self-contained cluster created by the {@link ClusterManager}. Each one has a {@link DjsDiscordClient} that contains
@@ -139,7 +139,7 @@ export class Cluster extends AsyncEventEmitter {
      * before resolving. (-1 or Infinity for no wait)
      */
     public async spawn(spawnTimeout = -1) {
-        if (this.thread) throw new Error('CLUSTER ALREADY SPAWNED | ClusterId: ' + this.id);
+        if (this.thread) throw new Error(`CLUSTER ALREADY SPAWNED | ClusterId: ${this.id}`);
         this.thread = new Child(Bun.resolveSync(this.manager.file, process.cwd()), {
             ...this.manager.clusterOptions,
             env: this.env as any,
@@ -163,7 +163,7 @@ export class Cluster extends AsyncEventEmitter {
         this.emit('spawn', this.thread.process);
 
         await new Promise((resolve, reject) => {
-            let spawnTimeoutTimer: any | undefined = undefined;
+            let spawnTimeoutTimer: any | undefined;
 
             const cleanup = (death = false) => {
                 clearTimeout(spawnTimeoutTimer);
@@ -185,12 +185,12 @@ export class Cluster extends AsyncEventEmitter {
 
             const onDeath = () => {
                 cleanup(true);
-                reject(new Error('CLUSTERING_READY_DIED | ClusterId: ' + this.id));
+                reject(new Error(`CLUSTERING_READY_DIED | ClusterId: ${this.id}`));
             };
 
             const onTimeout = () => {
                 cleanup();
-                reject(new Error('CLUSTERING_READY_TIMEOUT | ClusterId: ' + this.id));
+                reject(new Error(`CLUSTERING_READY_TIMEOUT | ClusterId: ${this.id}`));
             };
 
             // If there is a spawn timeout wait and error if cluster does not get ready
@@ -218,7 +218,7 @@ export class Cluster extends AsyncEventEmitter {
         }
         // Heartbeat will automatically detect death via Redis TTL Key expiration
         this.restarts.cleanup();
-        this.manager._debug('[KILL] Cluster killed with reason: ' + (options?.reason || 'not given'), this.id);
+        this.manager._debug(`[KILL] Cluster killed with reason: ${options?.reason || 'not given'}`, this.id);
     }
     /**
      * Kills and restarts the cluster's process.
@@ -266,7 +266,7 @@ export class Cluster extends AsyncEventEmitter {
         const _eval = typeof script === 'function' ? `(${script})(this, ${JSON.stringify(context)})` : script;
 
         // cluster is dead (maybe respawning), don't cache anything and error immediately
-        if (!this.thread) return Promise.reject(new Error('CLUSTERING_NO_CHILD_EXISTS | ClusterId: ' + this.id));
+        if (!this.thread) return Promise.reject(new Error(`CLUSTERING_NO_CHILD_EXISTS | ClusterId: ${this.id}`));
         const nonce = generateNonce();
         const message = { nonce, _eval, options: { timeout }, _type: messageType.CLIENT_EVAL_REQUEST };
         await this.send(message);
@@ -309,7 +309,7 @@ export class Cluster extends AsyncEventEmitter {
      * @private
      * @param {Number} exitCode
      */
-    private _handleExit(exitCode: number) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    private _handleExit(_exitCode: number) {
         /**
          * Emitted upon the cluster's child process exiting.
          * @event Cluster#death
@@ -325,7 +325,7 @@ export class Cluster extends AsyncEventEmitter {
         this.emit('death', this, this.thread?.process);
 
         this.manager._debug(
-            '[DEATH] Cluster died, attempting respawn | Restarts Left: ' + (this.restarts.max - this.restarts.current),
+            `[DEATH] Cluster died, attempting respawn | Restarts Left: ${this.restarts.max - this.restarts.current}`,
             this.id,
         );
 
@@ -340,7 +340,7 @@ export class Cluster extends AsyncEventEmitter {
                 '[ATTEMPTED_RESPAWN] Attempted Respawn Declined | Max Restarts have been exceeded',
                 this.id,
             );
-        if (respawn && this.restarts.current < this.restarts.max) this.spawn().catch(err => this.emit('error', err));
+        if (respawn && this.restarts.current < this.restarts.max) this.spawn().catch((err) => this.emit('error', err));
 
         this.restarts.append();
     }

@@ -1,8 +1,8 @@
 export function getInfo() {
     const shardList: number[] = [];
     const parseShardList = process.env?.SHARD_LIST?.split(',') || [];
-    parseShardList.forEach(c => shardList.push(Number(c)));
-    
+    parseShardList.forEach((c) => shardList.push(Number(c)));
+
     const data: ClusterClientData = {
         SHARD_LIST: shardList,
         TOTAL_SHARDS: Number(process.env.TOTAL_SHARDS),
@@ -15,7 +15,7 @@ export function getInfo() {
         LAST_SHARD_ID: shardList[shardList.length - 1] as number,
         HEARTBEAT_INTERVAL: Number(process.env.HEARTBEAT_INTERVAL) || 10000,
     };
-    
+
     return data;
 }
 

@@ -1,8 +1,5 @@
-import type { ClusterClient, ClusterManager, DjsDiscordClient} from "../index.ts";
-import {
-	arraysAreTheSame, fetchRecommendedShards,
-	messageType
-} from "../index.ts";
+import type { ClusterClient, ClusterManager, DjsDiscordClient } from '../index.ts';
+import { arraysAreTheSame, fetchRecommendedShards, messageType } from '../index.ts';
 
 export interface AutoResharderSendData {
     clusterId: number;
@@ -55,7 +52,7 @@ interface AutoResharderManagerOptions {
      * If set to "auto" it uses the recommendation amount of discord-gateway.
      * If set to "auto" then MaxGuildsPerShard must be at least 2000
      * @default 1500
-    */
+     */
     MinGuildsPerShard: 'auto' | number;
     /** If this number is reached, autoresharding starts */
     MaxGuildsPerShard: number;
@@ -80,9 +77,10 @@ export class AutoResharderClusterClient {
         sendDataFunction: (cluster: ClusterClient<DjsDiscordClient>) => {
             return {
                 clusterId: cluster.id,
-                shardData: cluster.info.SHARD_LIST.map(shardId => ({
+                shardData: cluster.info.SHARD_LIST.map((shardId) => ({
                     shardId,
-                    guildCount: cluster.client.guilds.cache.filter((g:{ shardId: number }) => g.shardId === shardId).size,
+                    guildCount: cluster.client.guilds.cache.filter((g: { shardId: number }) => g.shardId === shardId)
+                        .size,
                 })),
             };
         },
@@ -207,7 +205,7 @@ export class AutoResharderClusterClient {
             sendData.clusterId < 0 ||
             !Array.isArray(sendData.shardData) ||
             sendData.shardData.some(
-                v =>
+                (v) =>
                     typeof v.guildCount !== 'number' ||
                     v.guildCount < 0 ||
                     typeof v.shardId !== 'number' ||
@@ -250,7 +248,7 @@ export class AutoResharderManager {
         this.name = 'autoresharder';
         this.options = {
             ...this.options,
-            ...options ,
+            ...options,
             restartOptions: {
                 ...this.options.restartOptions,
                 ...options?.restartOptions,
@@ -258,7 +256,6 @@ export class AutoResharderManager {
         };
     }
     build(manager: ClusterManager) {
-
         (manager as any)[this.name] = this;
         this.manager = manager;
 
@@ -286,8 +283,8 @@ export class AutoResharderManager {
             );
         }
 
-        const reachedCluster = this.clusterDatas.find(v =>
-            v?.shardData.some(x => x && x.guildCount >= this.options.MaxGuildsPerShard),
+        const reachedCluster = this.clusterDatas.find((v) =>
+            v?.shardData.some((x) => x && x.guildCount >= this.options.MaxGuildsPerShard),
         );
         if (reachedCluster) {
             if (typeof this.manager.recluster === 'undefined')
@@ -299,9 +296,9 @@ export class AutoResharderManager {
                     ? await fetchRecommendedShards(this.manager.token as string)
                     : Math.ceil(
                           this.clusterDatas
-                              .flatMap(v => v?.shardData)
-                              .filter(d => d !== undefined)
-                              .reduce((a, b) => (!isNaN(b?.guildCount) ? b?.guildCount : 0) + (a || 0), 0) /
+                              .flatMap((v) => v?.shardData)
+                              .filter((d) => d !== undefined)
+                              .reduce((a, b) => (!Number.isNaN(b?.guildCount) ? b?.guildCount : 0) + (a || 0), 0) /
                               this.options.MinGuildsPerShard,
                       );
             const realShardCount =
@@ -328,22 +325,16 @@ export class AutoResharderManager {
             });
 
             this.isReClustering = false;
-            if (this.options.debug === true)
-                console.debug(
-                    `MANAGER-AUTORESHARDER :: Finished Autoresharding`,
-                    data,
-                );
+            if (this.options.debug === true) console.debug(`MANAGER-AUTORESHARDER :: Finished Autoresharding`, data);
         }
     }
     public getData(clusterData: AutoResharderSendData) {
-        const index = this.clusterDatas.findIndex(v => v && v.clusterId === clusterData.clusterId);
+        const index = this.clusterDatas.findIndex((v) => v && v.clusterId === clusterData.clusterId);
         if (index < 0) this.clusterDatas.push(clusterData);
         else this.clusterDatas[index] = clusterData;
 
         if (this.options.debug === true)
-            console.debug(
-                `MANAGER-AUTORESHARDER :: Reached sendData of Cluster #${clusterData.clusterId}`,
-            );
+            console.debug(`MANAGER-AUTORESHARDER :: Reached sendData of Cluster #${clusterData.clusterId}`);
         this.checkReCluster();
         return;
     }
@@ -353,12 +344,22 @@ export class AutoResharderManager {
     private validate() {
         if (!this.manager) throw new Error('Manager is missing on AutoResharderManager');
         if (typeof this.options.ShardsPerCluster === 'string' && this.options.ShardsPerCluster !== 'useManagerOption')
-            throw new SyntaxError("AutoResharderManagerOptions.ShardsPerCluster must be 'useManagerOption' or a number >= 1",);
-        else if (this.options.ShardsPerCluster !== 'useManagerOption' && (typeof this.options.ShardsPerCluster !== 'number' || this.options.ShardsPerCluster < 1))
-            throw new SyntaxError("AutoResharderManagerOptions.ShardsPerCluster must be 'useManagerOption' or a number >= 1",);
+            throw new SyntaxError(
+                "AutoResharderManagerOptions.ShardsPerCluster must be 'useManagerOption' or a number >= 1",
+            );
+        else if (
+            this.options.ShardsPerCluster !== 'useManagerOption' &&
+            (typeof this.options.ShardsPerCluster !== 'number' || this.options.ShardsPerCluster < 1)
+        )
+            throw new SyntaxError(
+                "AutoResharderManagerOptions.ShardsPerCluster must be 'useManagerOption' or a number >= 1",
+            );
         if (typeof this.options.MinGuildsPerShard === 'string' && this.options.MinGuildsPerShard !== 'auto')
             throw new SyntaxError("AutoResharderManagerOptions.MinGuildsPerShard must be 'auto' or a number >= 500");
-        else if (this.options.MinGuildsPerShard !== 'auto' && (typeof this.options.MinGuildsPerShard !== 'number' || this.options.MinGuildsPerShard < 500))
+        else if (
+            this.options.MinGuildsPerShard !== 'auto' &&
+            (typeof this.options.MinGuildsPerShard !== 'number' || this.options.MinGuildsPerShard < 500)
+        )
             throw new SyntaxError("AutoResharderManagerOptions.MinGuildsPerShard must be 'auto' or a number >= 500");
         if (
             typeof this.options.MaxGuildsPerShard !== 'number' ||
