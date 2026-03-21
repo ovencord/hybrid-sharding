@@ -2,7 +2,6 @@
 
 <p align="left">
 <a href="https://github.com/sponsors/LuigiColantuono">
-<img src="https://img.shields.io/github/sponsors/LuigiColantuono?style=social"></a> 
 <a href="https://paypal.me/l0g4n7"><img src="https://img.shields.io/badge/💖-Support-ff69b4"></a> 
 <img src="https://img.shields.io/npm/v/@ovencord/hybrid-sharding"> 
 <img src="https://img.shields.io/npm/dm/@ovencord/hybrid-sharding?label=downloads"> 
@@ -10,7 +9,6 @@
 <img src="https://saizu.dev/badge/ovencord/hybrid-sharding?type=gzip" alt="gzip size">
 <img src="https://saizu.dev/badge/ovencord/hybrid-sharding?type=install" alt="install size">
 <a href="https://github.com/ovencord/hybrid-sharding">
-<img src="https://img.shields.io/badge/Bun-Networking-black?logo=bun"></a>
 </p>
 
 <p align="center">
